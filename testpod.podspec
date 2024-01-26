@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name             = 'TestPod' 
+  s.name             = 'testpod' 
   s.version          = '1.0.0'
   s.summary          = 'test pod.'
   s.description      = 'test pod...'
@@ -13,6 +13,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.ios.deployment_target = '9.0'
 
-  s.source_files = 'Source/*.{h,m}'
+  s.source_files = '*.{h,m}'
   
 end
