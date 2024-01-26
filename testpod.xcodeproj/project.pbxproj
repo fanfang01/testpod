@@ -14,7 +14,6 @@
 		4908EF192B6386D5009C45BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4908EF182B6386D5009C45BF /* Assets.xcassets */; };
 		4908EF1C2B6386D5009C45BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4908EF1A2B6386D5009C45BF /* LaunchScreen.storyboard */; };
 		4908EF1F2B6386D5009C45BF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4908EF1E2B6386D5009C45BF /* main.m */; };
-		49964D692B6391A40083DBAA /* BaseVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 49964D682B6391A40083DBAA /* BaseVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,8 +29,6 @@
 		4908EF1B2B6386D5009C45BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4908EF1D2B6386D5009C45BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4908EF1E2B6386D5009C45BF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		49964D672B6391A40083DBAA /* BaseVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseVC.h; sourceTree = "<group>"; };
-		49964D682B6391A40083DBAA /* BaseVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,8 +80,6 @@
 		49964D572B638BE90083DBAA /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				49964D672B6391A40083DBAA /* BaseVC.h */,
-				49964D682B6391A40083DBAA /* BaseVC.m */,
 			);
 			path = Source;
 			sourceTree = SOURCE_ROOT;
@@ -162,7 +157,6 @@
 				4908EF142B6386D4009C45BF /* ViewController.m in Sources */,
 				4908EF0E2B6386D4009C45BF /* AppDelegate.m in Sources */,
 				4908EF1F2B6386D5009C45BF /* main.m in Sources */,
-				49964D692B6391A40083DBAA /* BaseVC.m in Sources */,
 				4908EF112B6386D4009C45BF /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
