@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
-  s.name             = 'testpod' 
-  s.version          = '1.0.3'
+  s.name             = 'testPodTr111' 
+  s.version          = '1.0.0'
   s.summary          = 'test pod.'
   s.description      = 'test pod...'
   
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.license          = "MIT"
   s.author           = { 'Tracy Fan' => '375747625@qq.com' }
 
-  s.source           = { :git => 'https://github.com/fanfang01/testpod.git', :tag => '1.0.3' }
+  s.source           = { :git => 'https://github.com/fanfang01/testpod.git', :tag => '1.0.0' }
   
   s.requires_arc = true
   s.ios.deployment_target = '12.0'
