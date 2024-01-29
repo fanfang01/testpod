@@ -6,6 +6,7 @@
 //
 
 #import "ViewController.h"
+#import "BaseVC.h"
 
 @interface ViewController ()
 
@@ -16,6 +17,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    BaseVC *vc = [[BaseVC alloc] init];
+    [self.view addSubview:vc.view];
+    vc.view.frame = self.view.frame;
 }
 
 
