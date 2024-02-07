@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/fanfang01/testpod.git', :tag => '1.0.0' }
   
   s.requires_arc = true
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'Source/*.{h,m}'
   
