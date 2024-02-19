@@ -29,13 +29,13 @@
 - (BaseTableView *)tableView {
     if (!_tableView) {
         _tableView = [[BaseTableView alloc] init];
-        _tableView.backgroundColor = UIColorHex(#F0F2F9);
+//        _tableView.backgroundColor = UIColorHex(#F0F2F9);
 //        _tableView.delegate = self;
 //        _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.rowHeight = 54;
 //        _tableView.noDataView.noDataStr = TBLocalizedStringForKey(Search_mqzwxggp);
-        _tableView.noDataView.backgroundColor = UIColorHex(#F0F2F9);
+//        _tableView.noDataView.backgroundColor = UIColorHex(#F0F2F9);
 //        _tableView.tableFooterView = self.clearFooter;
     }
     return _tableView;
