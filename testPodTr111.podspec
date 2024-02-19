@@ -15,4 +15,5 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Source/*.{h,m}'
   s.dependency 'YYKit'
+  s.dependency 'CTMediator'
 end
