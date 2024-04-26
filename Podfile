@@ -3,8 +3,9 @@ platform :ios, '10.0'
 use_frameworks!
 
 target 'testPodTr111' do
-   # pod 'YYKit'
-  #  pod 'CTMediator'
+    pod 'YYKit'
+    pod 'CTMediator'
+pod 'Masonry', '~> 1.1.0'
 end
 post_install do |installer|
     installer.generated_projects.each do |project|

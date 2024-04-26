@@ -7,7 +7,7 @@
 
 #import "ViewController.h"
 #import "BaseTableView.h"
-#import "UIColor+YYAdd.h"
+//#import "UIColor+YYAdd.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) BaseTableView *tableView;

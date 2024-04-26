@@ -1,3 +1,26 @@
-PODFILE CHECKSUM: c262390b9e1c099da9da578fa555b55e581f2a7a
+PODS:
+  - CTMediator (48)
+  - Masonry (1.1.0)
+  - YYKit (1.0.9):
+    - YYKit/no-arc (= 1.0.9)
+  - YYKit/no-arc (1.0.9)
+
+DEPENDENCIES:
+  - CTMediator
+  - Masonry (~> 1.1.0)
+  - YYKit
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - CTMediator
+    - Masonry
+    - YYKit
+
+SPEC CHECKSUMS:
+  CTMediator: 3f3578b525b3a46a7a2f92a99922ec40363f4269
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
+
+PODFILE CHECKSUM: 32d1b2afd0a76d6174e313e4790c74e8532d647a
 
 COCOAPODS: 1.11.2

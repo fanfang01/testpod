@@ -14,6 +14,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '10.0'
 
   s.source_files = 'Source/*.{h,m}'
-  s.dependency 'YYKit'
-  s.dependency 'CTMediator'
+  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'AFNetworking/Security'//to be confirmed
 end

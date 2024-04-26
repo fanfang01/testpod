@@ -1,0 +1,211 @@
+diff --git a/CIC_TradeBook/CIC_TradeBook.xcworkspace/xcuserdata/derrick.xcuserdatad/UserInterfaceState.xcuserstate b/CIC_TradeBook/CIC_TradeBook.xcworkspace/xcuserdata/derrick.xcuserdatad/UserInterfaceState.xcuserstate
+new file mode 100644
+index 00000000..1acd090f
+Binary files /dev/null and b/CIC_TradeBook/CIC_TradeBook.xcworkspace/xcuserdata/derrick.xcuserdatad/UserInterfaceState.xcuserstate differ
+diff --git a/TradeBook_Module/TradeBook_Public/Module/Portfolio/VC/PorfolioViewController.m b/TradeBook_Module/TradeBook_Public/Module/Portfolio/VC/PorfolioViewController.m
+index eaa2027a..80e2d08d 100644
+--- a/TradeBook_Module/TradeBook_Public/Module/Portfolio/VC/PorfolioViewController.m
++++ b/TradeBook_Module/TradeBook_Public/Module/Portfolio/VC/PorfolioViewController.m
+@@ -575,6 +575,7 @@ - (void)refreshCurrentStockInfoWithCodeModel:(NSArray *)currentCodeArray{
+     [self.tcpStockListArr removeAllObjects];
+     //取出RDS刷的股票代码
+     NSMutableArray *rdsCodeArray = [NSMutableArray array];
++    NSMutableArray *hksCodeArray = [NSMutableArray array];
+     
+     if (currentCodeArray.count > 0) {
+         for(StockInList *stock in currentCodeArray){
+@@ -582,17 +583,115 @@ - (void)refreshCurrentStockInfoWithCodeModel:(NSArray *)currentCodeArray{
+             if([ReportBase isChinaMarket:stock.m_itemcode] && ![Tool shouldLoadDataAndSubscribe]){
+                 continue;
+             }
++            //BMP权限不订阅
++            if ([Tool getHKMarketPowerValue] == 2) {
++                if ([ReportBase isHK:stock.m_itemcode]) {
++                    [hksCodeArray addObject:stock];
++                    continue;
++                }
++            }
+             [rdsCodeArray addObject:stock];
+             // 拿到code
+             [self.tcpStockListArr addObject:stock];
+         }
+     }
++    if (hksCodeArray.count > 0) {
++        if (hksCodeArray.count > 20) {
++            NSArray *bmpCodeArray = [hksCodeArray subarrayWithRange:NSMakeRange(0, 20)];
++            NSArray *delayCodeArray = [hksCodeArray subarrayWithRange:NSMakeRange(20, hksCodeArray.count-20)];
++            dispatch_group_t group = dispatch_group_create();
++            dispatch_group_enter(group);
++            [self requestBMPHKStockData:bmpCodeArray completion:^{
++                dispatch_group_leave(group);
++            }];
++            dispatch_group_enter(group);
++            [self requestDelayHKStockData:delayCodeArray completion:^{
++                dispatch_group_leave(group);
++            }];
++            dispatch_group_notify(group, dispatch_queue_create("com.tradeBook.porfolio", DISPATCH_QUEUE_CONCURRENT), ^{
++                //在这里做合并数据
++                
++            });
++        }else {
++            [self requestBMPHKStockData:hksCodeArray completion:^{
++                
++            }];
++        }
++    }
+     if (rdsCodeArray.count > 0) {
+         // 刷RDS
+         [self rdsRefreshStockList:rdsCodeArray];
+     }
+ }
+ 
++//单独请求港股的BMP数据
++- (void)requestBMPHKStockData:(NSArray *)codesArray completion:(void(^)(void))completion
++{
++    if (codesArray.count <= 0) {
++        NSLog(@"hk股票代码为空");
++        return;
++    }
++    NSMutableArray *newArr = [NSMutableArray array];
++    for(StockInList *stock in codesArray){
++        [newArr addObject:stock.m_itemcode];
++    }
++    WS(weakSelf);
++    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
++    
++    //To be confirmed
++    
++    [RDSMarketQuoteManager queryPorfolioInfoWithCodeArray:newArr isNeedBMPData:YES successBlock:^(RDSQueryPageSnapShot_WithFieldResponse *res) {
++        dispatch_async(dispatch_get_main_queue(), ^{
++            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
++            //刷新
++            [weakSelf refreshUIAndCombinationRdsData:res];
++            //订阅
++//            [weakSelf dealRquestRDSDataToSubscribeWith:codesArray];
++            //异步请求分时图数据
++            //to be confirmed
++//            [weakSelf requestStockFsLineDataWithStockCodes:codesArray];
++        });
++    } failBlock:^(RDSQueryPageSnapShot_WithFieldResponse *res) {
++        dispatch_async(dispatch_get_main_queue(), ^{
++            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
++        });
++    }];
++}
++
++- (void)requestDelayHKStockData:(NSArray *)codesArray completion:(void(^)(void))completion
++{
++    if (codesArray.count <= 0) {
++        NSLog(@"hk延时股票代码为空");
++        return;
++    }
++    NSMutableArray *newArr = [NSMutableArray array];
++    for(StockInList *stock in codesArray){
++        [newArr addObject:stock.m_itemcode];
++    }
++    WS(weakSelf);
++    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
++    
++    [RDSMarketQuoteManager queryPorfolioInfoWithCodeArray:newArr successBlock:^(RDSQueryPageSnapShot_WithFieldResponse *res) {
++        if (completion) {
++            completion();
++        }
++        dispatch_async(dispatch_get_main_queue(), ^{
++            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
++            //刷新
++            [weakSelf refreshUIAndCombinationRdsData:res];
++            //订阅
++//            [weakSelf dealRquestRDSDataToSubscribeWith:codesArray];
++            //异步请求分时图数据
++            //to be confirmed
++//            [weakSelf requestStockFsLineDataWithStockCodes:codesArray];
++        });
++    } failBlock:^(RDSQueryPageSnapShot_WithFieldResponse *res) {
++        dispatch_async(dispatch_get_main_queue(), ^{
++            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
++        });
++    }];
++}
++
+ 
+ #pragma mark -拿到当前屏幕的股票代码
+ - (NSArray *)getCurrentScreenStockCodeArray:(NSArray *)codeArray{
+@@ -616,6 +715,9 @@ - (NSArray *)getCurrentScreenStcokCodeModel{
+     NSMutableArray *codeArray = [NSMutableArray array];
+     [currentCellArray enumerateObjectsUsingBlock:^(PortfolioCell *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+         StockInList *stockModel = obj.cellModel;
++//        if (stockModel.m_itemcode ) {
++//            <#statements#>
++//        }
+         if (stockModel) {
+             [codeArray addObject:stockModel];
+         }
+@@ -1479,6 +1581,12 @@ - (void)refreshAvisiableCellsByRDS{
+     if (currentCodeArray.count > 0) {
+         
+         for(StockInList *stock in currentCodeArray){
++            //除BMP外的延时数据也不订阅
++            if ([Tool getHKMarketPowerValue] == 2) {//BMP
++                if ([ReportBase isHK:stock.m_itemcode]) {
++                    continue;
++                }
++            }
+             // 无A股权限不添加
+             if([ReportBase isChinaMarket:stock.m_itemcode] && ![Tool shouldLoadDataAndSubscribe]){
+                 continue;
+diff --git a/TradeBook_Module/TradeBook_Public/RDSService/RDSQuote/RDSMarketQuoteManager.h b/TradeBook_Module/TradeBook_Public/RDSService/RDSQuote/RDSMarketQuoteManager.h
+index 256dd295..760f9d29 100644
+--- a/TradeBook_Module/TradeBook_Public/RDSService/RDSQuote/RDSMarketQuoteManager.h
++++ b/TradeBook_Module/TradeBook_Public/RDSService/RDSQuote/RDSMarketQuoteManager.h
+@@ -137,7 +137,7 @@ typedef NS_ENUM(NSInteger ,RDSSubscribeStockObject) {
+ 
+ // 请求自选股
+ + (void)queryPorfolioInfoWithCodeArray:(NSArray *)codeArr successBlock:(void(^)(RDSQueryPageSnapShot_WithFieldResponse *res))successBlock failBlock:(void(^)(RDSQueryPageSnapShot_WithFieldResponse *res))failBlock;
+-
+++ (void)queryPorfolioInfoWithCodeArray:(NSArray *)codeArr isNeedBMPData:(BOOL)needBMPData successBlock:(void (^)(RDSQueryPageSnapShot_WithFieldResponse *))successBlock failBlock:(void (^)(RDSQueryPageSnapShot_WithFieldResponse *))failBlock;
+ /**
+ * AH列表类型
+ * @pageFirst 起始位置，可以指定列表的起始位置与请求条数
+diff --git a/TradeBook_Module/TradeBook_Public/RDSService/RDSQuote/RDSMarketQuoteManager.m b/TradeBook_Module/TradeBook_Public/RDSService/RDSQuote/RDSMarketQuoteManager.m
+index 82d6d8ce..23b2a51f 100644
+--- a/TradeBook_Module/TradeBook_Public/RDSService/RDSQuote/RDSMarketQuoteManager.m
++++ b/TradeBook_Module/TradeBook_Public/RDSService/RDSQuote/RDSMarketQuoteManager.m
+@@ -234,6 +234,38 @@ + (void)queryPorfolioInfoWithCodeArray:(NSArray *)codeArr successBlock:(void (^)
+     
+ }
+ 
+++ (void)queryPorfolioInfoWithCodeArray:(NSArray *)codeArr isNeedBMPData:(BOOL)needBMPData successBlock:(void (^)(RDSQueryPageSnapShot_WithFieldResponse *))successBlock failBlock:(void (^)(RDSQueryPageSnapShot_WithFieldResponse *))failBlock{
++    if (codeArr.count <= 0) {
++        return;
++    }
++    
++    __block RDSQueryPageSnapShot_PorfolioRequest *req = [RDSQueryPageSnapShot_PorfolioRequest new];
++    req.byType = 2; // 2 为订阅 需要穿代码Arr 1 传市场
++    //    req.reqType = SnapShortRequestType_Ext3;
++    req.className = Custom;
++    req.itemCodes = codeArr;
++    req.sortID = - 1;
++    req.needBMPData = needBMPData;
++    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
++        
++        NSData *data = [[RDSProxy shareProxy] createSynOperationWithRequest:req];
++        RDSQueryPageSnapShot_WithFieldResponse *response = [RDSQueryPageSnapShot_WithFieldResponse objectWithPorfolioData:data];
++        
++        if (0 == response.result && (nil != response)) {
++            if (successBlock) {
++                successBlock(response);
++            }
++        }else{
++            if (failBlock) {
++                failBlock(response);
++            }
++        }
++    });
++    
++    
++}
++
++
+ /**
+  *  行情列表查询
+  * @moudle 请求板块类型 根据市场与板块区分

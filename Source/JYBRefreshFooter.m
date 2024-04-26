@@ -7,6 +7,7 @@
 //
 
 #import "JYBRefreshFooter.h"
+#import "Masonry.h"
 
 const CGFloat kHeight = 44;
 
@@ -26,9 +27,9 @@ const CGFloat kHeight = 44;
 - (UILabel *)label {
     if (!_label) {
         _label = [UILabel new];
-        _label.textColor = deepSkinGrayColor(1);
+//        _label.textColor = deepSkinGrayColor(1);
         _label.font = [UIFont systemFontOfSize:12];
-        _label.text = TBLocalizedStringForKey(@"上拉加载");
+//        _label.text = TBLocalizedStringForKey(@"上拉加载");
     }
     return _label;
 }
@@ -104,15 +105,15 @@ const CGFloat kHeight = 44;
     super.state = state;
     switch (state) {
         case JYBRefreshStateIdle:
-            _label.text = TBLocalizedStringForKey(@"上拉加载");
+//            _label.text = TBLocalizedStringForKey(@"上拉加载");
             _imageView.hidden = NO;
             break;
         case JYBRefreshStateRefreshing:
-            _label.text = TBLocalizedStringForKey(@"加载中...");
+//            _label.text = TBLocalizedStringForKey(@"加载中...");
             _imageView.hidden = NO;
             break;
         case JYBRefreshStateNoMoreData:
-            _label.text = TBLocalizedStringForKey(@"无更多数据");
+//            _label.text = TBLocalizedStringForKey(@"无更多数据");
             _imageView.hidden = YES;
             break;
         default:
