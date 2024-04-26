@@ -15,5 +15,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Source/*.{h,m}'
   # s.dependency 'AFNetworking', '~> 2.3'
-  s.dependency 'AFNetworking/Security'//to be confirmed
+  s.dependency 'AFNetworking/Security'
+  # to be confirmed
 end
